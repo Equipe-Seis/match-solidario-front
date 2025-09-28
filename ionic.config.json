@@ -1,0 +1,7 @@
+{
+  "name": "match-solidario",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
