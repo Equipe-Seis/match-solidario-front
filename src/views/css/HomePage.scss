@@ -1,0 +1,41 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+  text-align: center;
+}
+
+.header {
+  margin-top: 40px;
+}
+
+.logo-icon {
+  font-size: 64px;
+  color: #007bff; 
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+p {
+  color: #666;
+  margin-bottom: 40px;
+}
+
+.action-buttons {
+  padding: 0 16px; 
+}
+
+ion-button {
+  height: 48px;
+  font-weight: bold;
+}
+
+ion-button[color="success"] {
+  --background: #2dd36f; 
+}
