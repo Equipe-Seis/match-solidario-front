@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth"; //Integração com Authentication - podemos remover se fizermos algo direto no server side
 
 const firebaseConfig = {
@@ -15,3 +16,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
+
+// Ensure correct Storage bucket on web/Android (APK) builds
+// Expected format: <project-id>.appspot.com
+const rawBucket = import.meta.env.VITE_FIREBASE_STORAGE_BUCKET as string | undefined;
+let normalizedBucket = rawBucket;
+if (rawBucket && rawBucket.endsWith('.firebasestorage.app')) {
+  normalizedBucket = rawBucket.replace('.firebasestorage.app', '.appspot.com');
+}
+export const storage = normalizedBucket
+  ? getStorage(app, `gs://${normalizedBucket}`)
+  : getStorage(app);

@@ -1,0 +1,15 @@
+.volunteer-register {
+  ion-card {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+
+  ion-item {
+    --highlight-color-focused: var(--ion-color-primary);
+  }
+
+  .actions {
+    margin-top: 16px;
+  }
+}
+
+
