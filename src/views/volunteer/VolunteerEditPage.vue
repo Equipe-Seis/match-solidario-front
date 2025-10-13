@@ -2,87 +2,48 @@
   <ion-page>
     <ion-header>
       <ion-toolbar color="primary">
-        <ion-title>Cadastro de Voluntário</ion-title>
+        <ion-title>Editar Voluntário</ion-title>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+          </ion-buttons>
       </ion-toolbar>
     </ion-header>
-
     <ion-content :fullscreen="true">
-      <div class="volunteer-register">
+      <div class="volunteer-edit ion-padding">
         <ion-card>
           <ion-card-header>
-            <ion-card-title>Perfil Pessoal</ion-card-title>
+            <ion-card-title>Dados do Perfil</ion-card-title>
           </ion-card-header>
-          <ion-card-content>
-            <form @submit.prevent="onSubmitUi">
-
+<ion-card-content>
+            <form @submit.prevent="onSaveUi">
               <ion-item>
                 <ion-label position="stacked">Nome completo</ion-label>
-                <ion-input
-                  v-model="form.fullName"
-                  required
-                  autocomplete="name"
-                  placeholder="Seu nome"
-                />
+                <ion-input v-model="form.fullName" required />
               </ion-item>
-
               <ion-item>
-                <ion-label position="stacked">Data de nascimento</ion-label>
-                <ion-input
-                  v-model="form.birthDate"
-                  type="date"
-                  required
-                />
+                <ion-label position="stacked">Telefone</ion-label>
+                <ion-input v-model="form.phone" @ionInput="onPhoneInput" :maxlength="15" />
               </ion-item>
-
               <ion-item>
-                <ion-label position="stacked">Gênero (opcional)</ion-label>
-                <ion-select v-model="form.gender" interface="popover" placeholder="Selecione">
-                  <ion-select-option value="feminino">Feminino</ion-select-option>
-                  <ion-select-option value="masculino">Masculino</ion-select-option>
-                  <ion-select-option value="nao-informar">Prefiro não informar</ion-select-option>
-                </ion-select>
+                <ion-label position="stacked">CPF (opcional)</ion-label>
+                <ion-input v-model="form.cpf" @ionInput="onCpfInput" :maxlength="11" />
               </ion-item>
-
               <ion-item>
                 <ion-label position="stacked">Cidade</ion-label>
-                <ion-input v-model="form.city" placeholder="Ex.: Recife" inputmode="text" required />
-                <ion-button slot="end" size="small" :disabled="geoLoading" @click="fillCityStateFromLocation">
-                  Usar localização
-                </ion-button>
+                <ion-input v-model="form.city" />
               </ion-item>
               <ion-item>
                 <ion-label position="stacked">UF</ion-label>
-                <ion-input v-model="form.state" placeholder="Ex.: PE" inputmode="text" required />
+                <ion-input v-model="form.state" />
               </ion-item>
-
               <ion-item>
-                <ion-label position="stacked">Telefone / WhatsApp</ion-label>
-                <ion-input
-                  v-model="form.phone"
-                  type="tel"
-                  inputmode="tel"
-                  placeholder="(00) 90000-0000"
-                  @ionInput="onPhoneInput"
-                  :maxlength="15"
-                  required
-                />
+                <ion-label position="stacked">Descrição</ion-label>
+                <ion-textarea v-model="form.description" auto-grow />
               </ion-item>
-
               <ion-item lines="none">
                 <ion-label position="stacked">Foto de perfil (opcional)</ion-label>
                 <input class="file-input" type="file" accept="image/*" @change="onFileChange" />
               </ion-item>
-
-              <ion-item>
-                <ion-label position="stacked">CPF (opcional)</ion-label>
-                <ion-input v-model="form.cpf" inputmode="numeric" placeholder="Somente números" @ionInput="onCpfInput" :maxlength="14" />
-              </ion-item>
-
-              <ion-item>
-                <ion-label position="stacked">Descrição (opcional)</ion-label>
-                <ion-textarea v-model="form.description" placeholder="Conte um pouco sobre você e coloque links de redes sociais se quiser" auto-grow />
-              </ion-item>
-
               <div class="actions"></div>
             </form>
           </ion-card-content>
@@ -179,126 +140,85 @@
     </ion-content>
     <ion-footer>
       <ion-toolbar>
-        <ion-button expand="block" @click="onSubmitUi" :disabled="submitting || !isValid">
-          {{ submitting ? 'Enviando...' : 'Salvar' }}
-        </ion-button>
+        <ion-button expand="block" :disabled="saving || !form.fullName" @click="onSaveUi">Salvar alterações</ion-button>
       </ion-toolbar>
     </ion-footer>
   </ion-page>
-  
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
-import { useRoute } from 'vue-router';
-import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-  IonItem,
-  IonLabel,
-  IonInput,
-  IonTextarea,
-  IonSelect,
-  IonSelectOption,
-  IonButton,
-  IonList,
-  IonCheckbox,
-  IonChip,
-  IonFooter
-} from '@ionic/vue';
-import useInterests from '@/composables/useInterests';
+import { onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { toastController, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonItem, IonLabel, IonInput, IonTextarea, IonFooter, IonButton, IonList, IonChip } from '@ionic/vue';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/firebase';
 import useVolunteerRegistration from '@/composables/useVolunteerRegistration';
+import useInterests from '@/composables/useInterests';
 import useAvailability from '@/composables/useAvailability';
-import useGeolocation from '@/composables/useGeolocation';
-import { toastController } from '@ionic/vue';
 
 const route = useRoute();
+const router = useRouter();
+const id = route.params.id as string;
+
+const { form, onPhoneInput, onCpfInput, onFileChange, updateVolunteer } = useVolunteerRegistration();
 const { interestsOptions, selectedInterests, loadInterests, toggleInterest } = useInterests();
-const { form, submitting, onFileChange, onPhoneInput, onCpfInput, submit } = useVolunteerRegistration();
 const { config: availabilityConfig, selected: availabilitySelected, loadAvailability, toggleInArray } = useAvailability();
-const { loading: geoLoading, requestCityState } = useGeolocation();
+const saving = ref(false);
 
-onMounted(async () => {
-  await Promise.all([loadInterests(), loadAvailability()]);
-});
+async function load() {
+  const snapshot = await getDoc(doc(db, 'volunteers', id));
+  if (!snapshot.exists()) {
+    const t = await toastController.create({ message: 'Voluntário não encontrado', duration: 1800, color: 'danger' });
+    await t.present();
+    router.back();
+    return;
+  }
+  const data = snapshot.data() as any;
+  form.fullName = data.fullName || '';
+  form.birthDate = data.birthDate || '';
+  form.gender = data.gender || '';
+  form.city = data.city || '';
+  form.state = data.state || '';
+  form.phone = data.phone || '';
+  form.cpf = data.cpf || '';
+  form.description = data.description || '';
+  // Pré-seleciona interesses e disponibilidade
+  if (Array.isArray(data.interests)) selectedInterests.value = data.interests;
+  if (data.availability) {
+    availabilitySelected.days = Array.isArray(data.availability.days) ? data.availability.days : [];
+    availabilitySelected.shifts = Array.isArray(data.availability.shifts) ? data.availability.shifts : [];
+    availabilitySelected.frequency = data.availability.frequency || '';
+    availabilitySelected.preference = data.availability.preference || '';
+  }
+}
 
-async function onSubmitUi() {
+async function onSaveUi() {
+  saving.value = true;
   try {
-    const userId = (route.query.userId as string) || undefined;
-    const res = await submit(selectedInterests.value, {
+    await updateVolunteer(id, selectedInterests.value, {
       days: availabilitySelected.days,
       shifts: availabilitySelected.shifts,
       frequency: availabilitySelected.frequency,
       preference: availabilitySelected.preference
-    }, userId);
-    if ((res as any)?.ok) {
-      const t = await toastController.create({ message: 'Cadastro salvo com sucesso!', duration: 1800, color: 'success' });
-      await t.present();
-    }
+    });
+    const t = await toastController.create({ message: 'Alterações salvas', duration: 1500, color: 'success' });
+    await t.present();
   } catch (e) {
-    const t = await toastController.create({ message: 'Falha ao salvar. Tente novamente.', duration: 2000, color: 'danger' });
+    const t = await toastController.create({ message: 'Falha ao salvar', duration: 1800, color: 'danger' });
     await t.present();
+  } finally {
+    saving.value = false;
   }
 }
 
-const isValid = computed(() => {
-  const hasBase = Boolean(form.fullName && form.phone && form.city && form.state);
-  const hasInterests = selectedInterests.value.length > 0;
-  const hasDays = availabilitySelected.days.length > 0;
-  const hasShifts = availabilitySelected.shifts.length > 0;
-  const hasFreq = !!availabilitySelected.frequency;
-  const hasPref = !!availabilitySelected.preference;
-  return hasBase && hasInterests && hasDays && hasShifts && hasFreq && hasPref;
+onMounted(async () => {
+  await Promise.all([loadInterests(), loadAvailability()]);
+  await load();
 });
-
-async function fillCityStateFromLocation() {
-  const loadingToast = await toastController.create({ message: 'Obtendo sua localização...', duration: 0, position: 'bottom' });
-  await loadingToast.present();
-  try {
-    const result = await requestCityState();
-    await loadingToast.dismiss();
-    if (result) {
-      form.city = result.city;
-      form.state = result.state;
-      const t = await toastController.create({ message: 'Cidade/UF preenchidos pela sua localização', duration: 1600, color: 'success' });
-      await t.present();
-    } else {
-      const t = await toastController.create({ message: 'Não foi possível obter sua localização', duration: 1800, color: 'medium' });
-      await t.present();
-    }
-  } catch (e: any) {
-    await loadingToast.dismiss();
-    const t = await toastController.create({ message: e?.message || 'Falha ao obter localização', duration: 2000, color: 'danger' });
-    await t.present();
-  }
-}
 </script>
 
-<style lang="scss" scoped>
-.volunteer-register {
-  padding: 16px;
-}
-
-.file-input {
-  margin-top: 8px;
-}
-
-.actions {
-  margin-top: 16px;
-}
-
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
+<style scoped>
+.actions { margin-top: 12px; }
 </style>
 
 

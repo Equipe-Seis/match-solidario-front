@@ -1,7 +1,8 @@
 import { reactive, ref } from 'vue';
 import useFirestore from '@/composables/useFirestore';
-import { storage } from '@/firebase';
+import { storage, db } from '@/firebase';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { doc, updateDoc } from 'firebase/firestore';
 
 export type VolunteerForm = {
   fullName: string;
@@ -71,7 +72,7 @@ export default function useVolunteerRegistration() {
     form.cpf = formatCpfInput(val);
   }
 
-  async function submit(selectedInterests: string[], availability?: { days: string[]; shifts: string[]; frequency: string; preference: string; }) {
+  async function submit(selectedInterests: string[], availability?: { days: string[]; shifts: string[]; frequency: string; preference: string; }, userId?: string) {
     if (!form.fullName || !form.birthDate || !form.city || !form.state || !form.phone) return;
     submitting.value = true;
     try {
@@ -87,7 +88,7 @@ export default function useVolunteerRegistration() {
       const phoneDigits = onlyDigits(form.phone);
       const cpfDigits = onlyDigits(form.cpf);
 
-      await addItem({
+      const volunteerId = await addItem({
         fullName: form.fullName,
         birthDate: form.birthDate,
         gender: form.gender || null,
@@ -98,15 +99,54 @@ export default function useVolunteerRegistration() {
         description: form.description || null,
         photoUrl,
         interests: selectedInterests,
-        availability: availability || null
+        availability: availability || null,
+        userId: userId || null
       });
+      if (userId) {
+        await updateDoc(doc(db, 'users', userId), { volunteerId, role: 'volunteer' });
+      }
       return { ok: true } as const;
     } finally {
       submitting.value = false;
     }
   }
 
-  return { form, submitting, onFileChange, onPhoneInput, onCpfInput, submit };
+  async function updateVolunteer(id: string, selectedInterests: string[], availability?: { days: string[]; shifts: string[]; frequency: string; preference: string; }) {
+    if (!id) return;
+    if (!form.fullName || !form.city || !form.state || !form.phone) return;
+    submitting.value = true;
+    try {
+      let photoUrl: string | null | undefined = undefined;
+      if (form.photoFile) {
+        const path = `volunteers/${Date.now()}_${form.photoFile.name}`;
+        const fileRef = storageRef(storage, path);
+        const contentType = form.photoFile.type || 'image/jpeg';
+        await uploadBytes(fileRef, form.photoFile, { contentType });
+        photoUrl = await getDownloadURL(fileRef);
+      }
+      const phoneDigits = onlyDigits(form.phone);
+      const cpfDigits = onlyDigits(form.cpf);
+      const payload: Record<string, any> = {
+        fullName: form.fullName,
+        birthDate: form.birthDate || null,
+        gender: form.gender || null,
+        city: form.city,
+        state: form.state,
+        phone: phoneDigits,
+        cpf: cpfDigits || null,
+        description: form.description || null,
+        interests: selectedInterests,
+        availability: availability || null
+      };
+      if (photoUrl !== undefined) payload.photoUrl = photoUrl;
+      await updateDoc(doc(db, 'volunteers', id), payload);
+      return { ok: true } as const;
+    } finally {
+      submitting.value = false;
+    }
+  }
+
+  return { form, submitting, onFileChange, onPhoneInput, onCpfInput, submit, updateVolunteer };
 }
 
 

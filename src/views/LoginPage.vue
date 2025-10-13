@@ -48,6 +48,7 @@
         <ion-button fill="clear" expand="block" @click="goToRegister">
           Não tem uma conta? Cadastre-se
         </ion-button>
+
       </div>
     </ion-content>
   </ion-page>
@@ -56,46 +57,53 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'; 
 import { useRouter } from 'vue-router';
-import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonList,
-  IonItem,
-  IonInput,
-  IonButton,
-  IonButtons,
-  IonBackButton,
-  IonIcon 
+import { 
+  IonPage, IonHeader, IonToolbar, IonTitle, IonContent,
+  IonList, IonItem, IonInput, IonButton, IonButtons, 
+  IonBackButton, IonIcon, toastController 
 } from '@ionic/vue';
 import { eye, eyeOff } from 'ionicons/icons'; 
+import { useAuth } from '@/composables/useAuth';
 
 const router = useRouter();
+const { login } = useAuth();
 
 const email = ref('');
 const password = ref('');
-
 const showPassword = ref(false);
 
 const passwordFieldType = computed(() => (showPassword.value ? 'text' : 'password'));
-
 const passwordFieldIcon = computed(() => (showPassword.value ? eyeOff : eye));
 
 function togglePasswordVisibility() {
   showPassword.value = !showPassword.value;
 }
 
-function handleLogin() {
-  console.log('Tentando fazer login com:', email.value, password.value);
-  router.push('/feed');
+async function handleLogin() {
+  try {
+    await login(email.value, password.value);
+    const toast = await toastController.create({
+      message: 'Login realizado com sucesso!',
+      duration: 1500,
+      color: 'success'
+    });
+    await toast.present();
+    router.push('/feed');
+  } catch (e) {
+    const t = await toastController.create({
+      message: 'Login inválido. Verifique suas credenciais.',
+      duration: 1800,
+      color: 'danger'
+    });
+    await t.present();
+  }
 }
 
 function goToRegister() {
-  router.push('/register');
+  router.push('/perfil');
 }
 </script>
+
 
 <style scoped lang="scss" src="./css/LoginPage.scss"></style>
 
