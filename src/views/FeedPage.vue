@@ -38,22 +38,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardSubtitle,
-  IonCardContent,
-  IonButton,
-  IonImg,
-  IonList,
-  IonFooter
-} from '@ionic/vue';
 
 const cards = ref([
   {

@@ -47,3 +47,5 @@ npm-debug.log*
 *.iml
 local.properties
 .env
+
+components.d.ts
