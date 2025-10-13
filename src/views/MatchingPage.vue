@@ -2,7 +2,7 @@
     <ion-page>
         <div class="main">
             <div class="card-stack">
-                <transition-group name="swipe" tag="div">
+                <transition-group name="swipe" tag="div" v-if="currentIndex <= cards.length - 1">
                     <div v-for="(card, index) in visibleCards" :key="card.id" class="card"
                         :style="{ zIndex: visibleCards.length - index }">
                         <img :src="card.image" alt="card image" />
@@ -18,9 +18,26 @@
                         </div>
                     </div>
                 </transition-group>
+                <div class="card transparent" v-else>
+                    <div
+                        style="display: flex; flex-direction: column; text-align: center; width: 100%; height: 100%; justify-content: center; align-items: center; font-size: 1.5rem;">
+                        <p>Você finalizou por hoje!</p>
+                        <p>Novos projetos estarão disponíveis amanhã.</p>
+                        <p>ou</p>
+                        <p>
+                            Clique no botão
+                            <ion-icon slot="icon-only" size="small" color="medium" :icon="reloadSharp"></ion-icon>
+                            para recomeçar.
+                        </p>
+
+                    </div>
+                </div>
             </div>
 
             <div class="actions">
+                <ion-button shape="round" color="white" size="large" @click="reset">
+                    <ion-icon slot="icon-only" color="medium" :icon="reloadSharp"></ion-icon>
+                </ion-button>
                 <ion-button shape="round" color="white" size="large" @click="swipeLeft">
                     <ion-icon slot="icon-only" color="danger" :icon="closeOutline"></ion-icon>
                 </ion-button>
@@ -34,7 +51,7 @@
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue';
-import { closeOutline, heart, location } from 'ionicons/icons';
+import { closeOutline, heart, location, reloadSharp } from 'ionicons/icons';
 
 const cards = ref([
     { id: 1, name: 'Limpeza Rio Jacuí', description: 'Limpar o rio vai fazer bem para todos', location: 'Caldas Rosas, SP', image: 'https://docs-demo.ionic.io/assets/madison.jpg' },
@@ -47,13 +64,17 @@ const currentIndex = ref(0);
 const visibleCards = computed(() => cards.value.slice(currentIndex.value, currentIndex.value + 3));
 
 const swipeLeft = () => {
-    if (currentIndex.value < cards.value.length - 1)
+    if (currentIndex.value < cards.value.length)
         currentIndex.value++;
 }
 
 const swipeRight = () => {
-    if (currentIndex.value < cards.value.length - 1)
+    if (currentIndex.value < cards.value.length)
         currentIndex.value++;
+}
+
+const reset = () => {
+    currentIndex.value = 0;
 }
 
 </script>
@@ -86,6 +107,9 @@ const swipeRight = () => {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     background: #000;
     transition: transform 0.4s ease, opacity 0.3s ease;
+    &.transparent {
+            background: #fff;
+        }
 }
 
 .card img {
