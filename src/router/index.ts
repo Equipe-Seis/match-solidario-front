@@ -11,19 +11,27 @@ import VolunteerEditPage from '../views/volunteer/VolunteerEditPage.vue';
 const InstitutionRegisterPage = () => import('../views/institution/InstitutionRegisterPage.vue');
 import ItemView from '@/views/ItemView.vue';
 import { auth } from '@/firebase';
+import MatchingPage from "@/views/MatchingPage.vue";
 
 const routes: Array<RouteRecordRaw> = [
-  { path: '/', component: LoginPage },
-  { path: '/login', component: LoginPage },
-  { path: '/home', component: HomePage },
-  { path: '/feed', component: FeedPage, meta: { requiresAuth: true } },
-  { path: '/register', component: RegisterPage },
-  { path: '/perfil', component: PerfilPage },
-  { path: '/profile', component: ProfilePage, meta: { requiresAuth: true } },
-  { path: '/volunteer/register', component: VolunteerRegisterPage },
-  { path: '/volunteer/edit/:id', component: VolunteerEditPage, meta: { requiresAuth: true } },
-  { path: '/institution/register', component: InstitutionRegisterPage },
-  { path: '/itemsview', component: ItemView} //TODO: remover esta rota antes da entrega, exemplo de utilização do firebase
+  { path: "/", component: LoginPage },
+  { path: "/login", component: LoginPage },
+  { path: "/home", component: HomePage },
+  { path: "/feed", component: FeedPage, meta: { requiresAuth: true } },
+  { path: "/register", component: RegisterPage },
+  { path: "/perfil", component: PerfilPage },
+  { path: "/profile", component: ProfilePage, meta: { requiresAuth: true } },
+  { path: "/volunteer/register", component: VolunteerRegisterPage },
+  {
+    path: "/volunteer/edit/:id",
+    component: VolunteerEditPage,
+    meta: { requiresAuth: true },
+  },
+  { path: "/institution/register", component: InstitutionRegisterPage, meta: { requiresAuth: true } },
+
+
+  { path: "/itemsview", component: ItemView }, //TODO: remover esta rota antes da entrega, exemplo de utilização do firebase
+  { path: "/match", component: MatchingPage },
 ];
 
 if (import.meta.env.VITE_ENABLE_DEV_ROUTES === 'true') {
