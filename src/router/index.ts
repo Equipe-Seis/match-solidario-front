@@ -27,7 +27,9 @@ const routes: Array<RouteRecordRaw> = [
     component: VolunteerEditPage,
     meta: { requiresAuth: true },
   },
-  { path: "/institution/register", component: InstitutionRegisterPage },
+  { path: "/institution/register", component: InstitutionRegisterPage, meta: { requiresAuth: true } },
+
+
   { path: "/itemsview", component: ItemView }, //TODO: remover esta rota antes da entrega, exemplo de utilização do firebase
   { path: "/match", component: MatchingPage },
 ];

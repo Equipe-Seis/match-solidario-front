@@ -18,6 +18,12 @@
             <ion-icon :icon="personCircleOutline" slot="start"></ion-icon>
             <ion-label>Perfil</ion-label>
           </ion-item>
+
+           <ion-item button router-link="/institution/register">
+            <ion-icon :icon="heart" slot="start"></ion-icon>
+            <ion-label>Cadastrar um Projeto</ion-label>
+          </ion-item>
+
           <ion-item button @click="logoutUser">
             <ion-icon :icon="logOutOutline" slot="start"></ion-icon>
             <ion-label>Sair</ion-label>
@@ -53,7 +59,9 @@ import {
   personCircleOutline,
   heartOutline,
   settingsOutline,
+  
   logOutOutline,
+  heart,
 } from 'ionicons/icons';
 
 import { useAuth } from '@/composables/useAuth';

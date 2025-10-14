@@ -3,29 +3,43 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-title>Serviços Solidários</ion-title>
-          <ion-buttons slot="start">
-            <ion-menu-button></ion-menu-button>
-          </ion-buttons>
+        <ion-buttons slot="start">
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
     <ion-content :fullscreen="true">
-      <ion-list>
-        <ion-card v-for="item in cards" :key="item.id" class="custom-card">
-          <ion-img :src="item.image" class="card-image"></ion-img>
+      <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
+
+      <div v-if="loading" class="ion-text-center ion-padding">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Carregando vagas...</p>
+      </div>
+
+      <div v-if="!loading && services.length === 0" class="ion-text-center ion-padding">
+        <p>Nenhum serviço encontrado no momento.</p>
+        <ion-button @click="handleRefresh()" fill="clear">Tentar novamente</ion-button>
+      </div>
+
+      <ion-list v-else>
+        <ion-card v-for="service in services" :key="service.id" class="custom-card">
+          <ion-img :src="service.imageUrl || 'https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=872&auto=format&fit=crop'" class="card-image"></ion-img>
 
           <ion-card-header>
-            <ion-card-title>{{ item.title }}</ion-card-title>
-            <ion-card-subtitle>{{ item.tags.join(' • ') }}</ion-card-subtitle>
+            <ion-card-title>{{ service.title }}</ion-card-title>
+            <ion-card-subtitle>{{ service.categories.join(' • ' ) }}</ion-card-subtitle>
           </ion-card-header>
 
           <ion-card-content>
-            Distância: {{ item.distance }} km
+            Projeto: {{ service.projectName }}
           </ion-card-content>
 
           <ion-footer class="ion-no-border">
             <ion-toolbar>
-              <ion-button expand="block" color="success" @click="confirm(item)">
+              <ion-button expand="block" color="success" @click="confirm(service)">
                 Confirmar Interesse
               </ion-button>
             </ion-toolbar>
@@ -37,28 +51,69 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import {
+  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonCard, IonImg, IonCardHeader,
+  IonCardTitle, IonCardSubtitle, IonCardContent, IonFooter, IonButton, IonButtons, IonMenuButton,
+  IonSpinner, IonRefresher, IonRefresherContent
+} from '@ionic/vue';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { db } from '@/firebase';
 
-const cards = ref([
-  {
-    id: 1,
-    title: 'Aulas de reforço escolar',
-    tags: ['Educação', 'Crianças'],
-    distance: 2.5,
-    image: 'https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=872&auto=format&fit=crop'
-  },
-  {
-    id: 2,
-    title: 'Carona solidária',
-    tags: ['Transporte', 'Saúde'],
-    distance: 5.1,
-    image: 'https://images.unsplash.com/photo-1534708112740-cb40ecb0663e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-  }
-] );
-
-function confirm(item: any) {
-  alert('Você se conectou com: ' + item.title);
+interface Service {
+  id: string;
+  title: string;
+  projectName: string;
+  categories: string[];
+  imageUrl?: string;
 }
+
+const services = ref<Service[]>([]);
+const loading = ref(true);
+
+async function fetchServices() {
+  loading.value = true;
+  try {
+    const servicesCollection = collection(db, 'services');
+    const q = query(servicesCollection, orderBy('createdAt', 'desc'));
+    
+    const querySnapshot = await getDocs(q);
+    
+    const fetchedServices: Service[] = [];
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      fetchedServices.push({
+        id: doc.id,
+        title: data.title,
+        projectName: data.projectName,
+        categories: data.categories || [],
+        imageUrl: data.imageUrl,
+      });
+    });
+    
+    services.value = fetchedServices;
+
+  } catch (error) {
+    console.error("Erro ao buscar vagas:", error);
+  } finally {
+    loading.value = false;
+  }
+}
+
+const handleRefresh = async (event?: CustomEvent) => {
+  await fetchServices();
+  if (event && event.target) {
+    (event.target as HTMLIonRefresherElement).complete();
+  }
+};
+
+function confirm(service: Service) {
+  alert('Você se conectou com: ' + service.title);
+}
+
+onMounted(() => {
+  fetchServices();
+});
 </script>
 
 <style scoped>
