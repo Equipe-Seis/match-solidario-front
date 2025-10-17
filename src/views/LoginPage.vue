@@ -7,44 +7,41 @@
     </ion-header>
     <ion-content class="ion-padding">
       <div class="login-container">
-        <h1 color="primary">Bem-vindo de volta!</h1>
-        <p>Faça login para continuar</p>
-        <ion-list>
-          <ion-item>
-            <ion-input
-              label-placement="floating"
-              value="hi@ionic.io"
-              type="email"
-              placeholder="seu@email.com"
-              v-model="email"
-            >
-              <div slot="label">Email</div>
-            </ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-input
-              label-placement="floating"
-              :type="passwordFieldType"
-              v-model="password"
-            >
-              <div slot="label">Senha</div>
-            </ion-input>
-            <ion-icon
-              slot="end"
-              :icon="passwordFieldIcon"
-              @click="togglePasswordVisibility"
-              class="password-toggle-icon"
-            ></ion-icon>
-          </ion-item>
-        </ion-list>
+        <div class="ion-padding">
+          <h1 color="primary">Bem-vindo de volta!</h1>
+          <h5>Faça login para continuar!</h5>
+        </div>
+        <div class="ion-padding">
+          <ion-input
+            label="Email"
+            label-placement="stacked"
+            value="hi@ionic.io"
+            type="email"
+            placeholder="seu@email.com"
+            v-model="email"
+          >
+          </ion-input>
+          <ion-input
+            label="Senha"
+            label-placement="stacked"
+            type="password"
+            v-model="password"
+          >
+            <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+          </ion-input>
 
-        <ion-button expand="block" @click="handleLogin" class="ion-margin-top">
-          Entrar
-        </ion-button>
+          <ion-button
+            expand="block"
+            @click="handleLogin"
+            class="ion-margin-top"
+          >
+            Entrar
+          </ion-button>
 
-        <ion-button fill="clear" expand="block" @click="goToRegister">
-          Não tem uma conta? Cadastre-se
-        </ion-button>
+          <ion-button fill="clear" expand="block" @click="goToRegister">
+            Não tem uma conta? Cadastre-se
+          </ion-button>
+        </div>
       </div>
     </ion-content>
   </ion-page>
@@ -59,12 +56,10 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
-  IonList,
-  IonItem,
   IonInput,
   IonButton,
-  IonIcon,
   toastController,
+  IonInputPasswordToggle,
 } from "@ionic/vue";
 import { eye, eyeOff } from "ionicons/icons";
 import { useAuth } from "@/composables/useAuth";
@@ -74,16 +69,6 @@ const { login } = useAuth();
 
 const email = ref("");
 const password = ref("");
-const showPassword = ref(false);
-
-const passwordFieldType = computed(() =>
-  showPassword.value ? "text" : "password"
-);
-const passwordFieldIcon = computed(() => (showPassword.value ? eyeOff : eye));
-
-function togglePasswordVisibility() {
-  showPassword.value = !showPassword.value;
-}
 
 async function handleLogin() {
   try {
@@ -106,7 +91,7 @@ async function handleLogin() {
 }
 
 function goToRegister() {
-  router.push("/perfil");
+  router.push("/home");
 }
 </script>
 
