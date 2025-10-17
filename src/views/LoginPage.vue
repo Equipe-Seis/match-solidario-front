@@ -7,27 +7,28 @@
     </ion-header>
     <ion-content class="ion-padding">
       <div class="login-container">
-        <h1>Bem-vindo de volta!</h1>
+        <h1 color="primary">Bem-vindo de volta!</h1>
         <p>Faça login para continuar</p>
-
         <ion-list>
           <ion-item>
-            <ion-label position="stacked">Email</ion-label>
             <ion-input
               label-placement="floating"
+              value="hi@ionic.io"
               type="email"
               placeholder="seu@email.com"
               v-model="email"
-            ></ion-input>
+            >
+              <div slot="label">Email</div>
+            </ion-input>
           </ion-item>
-
           <ion-item>
-            <ion-label position="stacked">Senha</ion-label>
             <ion-input
               label-placement="floating"
               :type="passwordFieldType"
               v-model="password"
-            ></ion-input>
+            >
+              <div slot="label">Senha</div>
+            </ion-input>
             <ion-icon
               slot="end"
               :icon="passwordFieldIcon"

@@ -1,5 +1,7 @@
 <template>
   <ion-app>
+    <CustomSplash />
+
     <ion-menu content-id="main-content" side="start" menu-id="mainMenu">
       <ion-header>
         <ion-toolbar color="primary">
@@ -19,7 +21,7 @@
             <ion-label>Perfil</ion-label>
           </ion-item>
 
-           <ion-item button router-link="/institution/register">
+          <ion-item button router-link="/institution/register">
             <ion-icon :icon="heart" slot="start"></ion-icon>
             <ion-label>Cadastrar um Projeto</ion-label>
           </ion-item>
@@ -59,13 +61,13 @@ import {
   personCircleOutline,
   heartOutline,
   settingsOutline,
-  
   logOutOutline,
   heart,
 } from 'ionicons/icons';
 
 import { useAuth } from '@/composables/useAuth';
 import { useRouter } from 'vue-router';
+import CustomSplash from '@/components/CustomSplash.vue';
 
 const { logout } = useAuth();
 const router = useRouter();
@@ -75,4 +77,5 @@ async function logoutUser() {
   router.push('/login');
 }
 </script>
+
 
