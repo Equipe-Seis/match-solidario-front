@@ -70,7 +70,7 @@ async function handleLogin() {
       color: "success",
     });
     await toast.present();
-    router.push("/feed");
+    router.push("/match");
   } catch (e) {
     const t = await toastController.create({
       message: "Login inválido. Verifique suas credenciais.",

@@ -1,3 +1,24 @@
+@font-face {
+  font-family: 'Poppins';
+  src: url('assets/fonts/Poppins-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('assets/fonts/Poppins-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('assets/fonts/Poppins-Italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+
 :root {
 
   --ion-background-color: #f4f5f8;
@@ -49,4 +70,6 @@
   --ion-item-background: #ffffff; 
   --ion-toolbar-background: #ffffff; 
   --ion-card-background: #ffffff; 
+
+  --ion-font-family: 'Poppins', sans-serif;
 }
