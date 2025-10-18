@@ -1,35 +1,25 @@
 <template>
-  <ion-header>
-    <ion-toolbar color="primary">
-      <ion-title></ion-title>
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
   <ion-page>
     <div class="main">
-      <!-- Stack de cards -->
       <div class="card-stack" v-if="!selectedCard">
-        <transition-group
-          name="swipe"
-          tag="div"
-          v-if="currentIndex <= cards.length - 1"
-        >
-          <div
-            v-for="(card, index) in visibleCards"
-            :key="card.id"
-            class="card"
-            :style="{ zIndex: visibleCards.length - index }"
-            @click="openDetails(card)"
-          >
-            <img :src="card.image" alt="card image" />
+        <ion-loading class="custom-loading" message="Carregando dados..." :isOpen="loading"></ion-loading>
+
+        <div class="card transparent" v-if="loading">
+          <div class="card-placeholder">
+            <p>Estamos carregando tudo para você.</p>
+            <p>Por favor, aguarde!</p>
+          </div>
+        </div>
+        <transition-group name="swipe" tag="div" v-else-if="currentIndex <= cards.length - 1">
+          <div v-for="(card, index) in services" :key="card.id" class="card"
+            :style="{ zIndex: visibleCards.length - index }" @click="openDetails(card)">
+            <img :src="card.imageUrl" alt="card image" />
             <div class="overlay">
-              <div style="display: flex; flex-direction: column; gap: 5px">
-                <span>{{ card.name }}</span>
-                <span class="subtitle">{{ card.description }}</span>
+              <div style="display: flex; flex-direction: column; gap: 5px;">
+                <span>{{ card.projectName }}</span>
+                <!-- <span class="subtitle">{{ card.description }}</span> -->
                 <span class="location">
-                  {{ card.location }}
+                  {{ card.address }}
                   <ion-icon :icon="location"></ion-icon>
                 </span>
               </div>
@@ -38,107 +28,70 @@
         </transition-group>
 
         <div class="card transparent" v-else>
-          <div
-            style="
-              display: flex;
-              flex-direction: column;
-              text-align: center;
-              width: 100%;
-              height: 100%;
-              justify-content: center;
-              align-items: center;
-              font-size: 1.5rem;
-            "
-          >
+          <div class="card-placeholder">
             <p>Você finalizou por hoje!</p>
             <p>Novos projetos estarão disponíveis amanhã.</p>
             <p>ou</p>
             <p>
               Clique no botão
-              <ion-icon
-                slot="icon-only"
-                size="small"
-                color="medium"
-                :icon="reloadSharp"
-              ></ion-icon>
+              <ion-icon slot="icon-only" size="small" color="medium" :icon="reloadSharp"></ion-icon>
               para recomeçar.
             </p>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- DETAILS -->
-      <transition name="expand">
-        <div v-if="selectedCard" class="details-view">
-          <img
-            :src="selectedCard.image"
-            class="details-image"
-            alt="Detalhe do projeto"
-          />
-          <ion-icon
-            :icon="closeOutline"
-            class="back-icon"
-            @click="closeDetails"
-          />
+    <transition name="expand">
+      <div v-if="selectedCard" class="details-view">
+        <img :src="selectedCard.image" class="details-image" alt="Detalhe do projeto" />
+        <ion-icon :icon="closeOutline" class="back-icon" @click="closeDetails" />
 
-          <div class="details-content">
-            <h1>{{ selectedCard.name }}</h1>
-            <div class="location">
-              <ion-icon :icon="location"></ion-icon>
-              {{ selectedCard.location }}
-            </div>
+        <div class="details-content">
+          <h1>{{ selectedCard.name }}</h1>
+          <div class="location">
+            <ion-icon :icon="location"></ion-icon>
+            {{ selectedCard.location }}
+          </div>
 
-            <p class="description">{{ selectedCard.description }}</p>
+          <p class="description">{{ selectedCard.description }}</p>
 
-            <ion-button expand="block" color="primary" shape="round">
-              Participar
-            </ion-button>
+          <ion-button expand="block" color="primary" shape="round">
+            Participar
+          </ion-button>
 
-            <div>
-              <h2 style="border-bottom: 2px solid #666">Galeria de fotos</h2>
-              <ion-grid>
-                <ion-row>
-                  <ion-col v-for="i in 20" size="6">
-                    <img :src="selectedCard.image" alt="Detalhe do projeto" />
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
-            </div>
+          <div>
+            <h2 style="border-bottom: 2px solid #666">Galeria de fotos</h2>
+            <ion-grid>
+              <ion-row>
+                <ion-col v-for="i in 20" size="6">
+                  <img :src="selectedCard.image" alt="Detalhe do projeto" />
+                </ion-col>
+              </ion-row>
+            </ion-grid>
           </div>
         </div>
-      </transition>
-
-      <div v-if="!selectedCard" class="actions">
-        <ion-button shape="round" color="white" size="large" @click="reset">
-          <ion-icon
-            slot="icon-only"
-            color="medium"
-            :icon="reloadSharp"
-          ></ion-icon>
-        </ion-button>
-        <ion-button shape="round" color="white" size="large" @click="swipeLeft">
-          <ion-icon
-            slot="icon-only"
-            color="danger"
-            :icon="closeOutline"
-          ></ion-icon>
-        </ion-button>
-        <ion-button
-          shape="round"
-          color="white"
-          size="large"
-          @click="swipeRight"
-        >
-          <ion-icon slot="icon-only" color="primary" :icon="heart"></ion-icon>
-        </ion-button>
       </div>
+    </transition>
+
+    <div v-if="!selectedCard" class="actions">
+      <ion-button shape="round" color="white" size="large" @click="reset">
+        <ion-icon slot="icon-only" color="medium" :icon="reloadSharp"></ion-icon>
+      </ion-button>
+      <ion-button shape="round" color="white" size="large" @click="swipeLeft">
+        <ion-icon slot="icon-only" color="danger" :icon="closeOutline"></ion-icon>
+      </ion-button>
+      <ion-button shape="round" color="white" size="large" @click="swipeRight">
+        <ion-icon slot="icon-only" color="primary" :icon="heart"></ion-icon>
+      </ion-button>
     </div>
   </ion-page>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
-import { closeOutline, heart, location, reloadSharp } from "ionicons/icons";
+import { ref, computed } from 'vue';
+import { closeOutline, heart, location, reloadSharp } from 'ionicons/icons';
+import { useServices } from '@/composables/useServices';
 
 type Card = {
   id: number;
@@ -181,6 +134,8 @@ const cards = ref<Card[]>([
   },
 ]);
 
+const { load, services, loading, isError } = useServices()
+
 const currentIndex = ref(0);
 const selectedCard = ref<Card | null>(null);
 
@@ -200,6 +155,7 @@ const reset = () => {
   currentIndex.value = 0;
 };
 
+
 const openDetails = (card: any) => {
   selectedCard.value = card;
 };
@@ -207,6 +163,12 @@ const openDetails = (card: any) => {
 const closeDetails = () => {
   selectedCard.value = null;
 };
+
+const build = async () => {
+  setTimeout(() => load(), 1500)
+}
+
+build()
 </script>
 
 <style scoped>
@@ -262,6 +224,16 @@ const closeDetails = () => {
   max-width: 100%;
 }
 
+.card-placeholder {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+}
 .overlay .subtitle {
   font-weight: 100;
   font-size: 1rem;
@@ -305,9 +277,6 @@ const closeDetails = () => {
   object-fit: cover;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
-}
-
-.galera-image {
 }
 
 .back-icon {
@@ -362,6 +331,7 @@ const closeDetails = () => {
   opacity: 0;
   transform: translateY(20px);
 }
+
 .actions {
   display: flex;
   justify-content: center;
