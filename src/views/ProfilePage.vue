@@ -3,7 +3,7 @@
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button default-href="/feed"></ion-back-button>
+          <ion-back-button default-href="/match"></ion-back-button>
         </ion-buttons>
         <ion-title>Meu Perfil</ion-title>
       </ion-toolbar>

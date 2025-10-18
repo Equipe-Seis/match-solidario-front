@@ -1,11 +1,9 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import type { RouteRecordRaw } from 'vue-router';
 import HomePage from '../views/HomePage.vue';
-import FeedPage from '../views/FeedPage.vue';
 import LoginPage from '../views/LoginPage.vue';
 import RegisterPage from '../views/RegisterPage.vue';
 import ProfilePage from '../views/ProfilePage.vue';
-import PerfilPage from '../views/PerfilPage.vue';
 import MatchingPage from '@/views/MatchingPage.vue';
 import VolunteerRegisterPage from '../views/volunteer/VolunteerRegisterPage.vue';
 import VolunteerEditPage from '../views/volunteer/VolunteerEditPage.vue';
@@ -17,21 +15,17 @@ const routes: Array<RouteRecordRaw> = [
   { path: "/", component: LoginPage },
   { path: "/login", component: LoginPage },
   { path: "/home", component: HomePage },
-  { path: "/match", component: MatchingPage, meta: { requiresAuth: true } },
+  { path: "/match", component: MatchingPage}, //, meta: { requiresAuth: true } 
   { path: "/register", component: RegisterPage },
-  { path: "/perfil", component: PerfilPage },
-  { path: "/profile", component: ProfilePage, meta: { requiresAuth: true } },
+  { path: "/profile", component: ProfilePage}, //, meta: { requiresAuth: true } 
   { path: "/volunteer/register", component: VolunteerRegisterPage },
   {
     path: "/volunteer/edit/:id",
     component: VolunteerEditPage,
     meta: { requiresAuth: true },
   },
-  { path: "/institution/register", component: InstitutionRegisterPage, meta: { requiresAuth: true } },
-
-
-  { path: "/itemsview", component: ItemView }, //TODO: remover esta rota antes da entrega, exemplo de utilização do firebase
-  { path: "/match", component: MatchingPage },
+  { path: "/institution/register", component: InstitutionRegisterPage}, //, meta: { requiresAuth: true } 
+  //{ path: "/match", component: MatchingPage },
 ];
 
 if (import.meta.env.VITE_ENABLE_DEV_ROUTES === 'true') {

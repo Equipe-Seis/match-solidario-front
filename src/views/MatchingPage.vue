@@ -1,13 +1,18 @@
 <template>
-  <ion-header>
-    <ion-toolbar color="primary">
-      <ion-title></ion-title>
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
   <ion-page>
+    <ion-header class="ion-no-border" :translucent="true">
+      <ion-toolbar color="transparent">
+        <ion-title></ion-title>
+        <ion-buttons slot="start">
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-buttons slot="secondary">
+          <ion-button>
+            <ion-icon slot="icon-only" :icon="personOutline" size="large"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
     <div class="main">
       <!-- Stack de cards -->
       <div class="card-stack" v-if="!selectedCard">
@@ -59,7 +64,7 @@
                 slot="icon-only"
                 size="small"
                 color="medium"
-                :icon="reloadSharp"
+                :icon="refreshOutline"
               ></ion-icon>
               para recomeçar.
             </p>
@@ -113,23 +118,37 @@
           <ion-icon
             slot="icon-only"
             color="medium"
-            :icon="reloadSharp"
+            :icon="refreshOutline"
           ></ion-icon>
         </ion-button>
-        <ion-button shape="round" color="white" size="large" @click="swipeLeft">
+        <ion-button shape="round" color="white" size="large" @click="undo">
+          <ion-icon
+            slot="icon-only"
+            color="warning"
+            :icon="arrowUndoOutline"
+          ></ion-icon>
+        </ion-button>
+        <ion-button shape="round" color="white" size="large" @click="swipe">
           <ion-icon
             slot="icon-only"
             color="danger"
             :icon="closeOutline"
           ></ion-icon>
         </ion-button>
+        <ion-button shape="round" color="white" size="large" @click="swipe">
+          <ion-icon
+            slot="icon-only"
+            color="primary"
+            :icon="starOutline"
+          ></ion-icon>
+        </ion-button>
         <ion-button
           shape="round"
           color="white"
           size="large"
-          @click="swipeRight"
+          @click="swipe"
         >
-          <ion-icon slot="icon-only" color="primary" :icon="heart"></ion-icon>
+          <ion-icon slot="icon-only" color="success" :icon="heartOutline"></ion-icon>
         </ion-button>
       </div>
     </div>
@@ -138,7 +157,16 @@
 
 <script lang="ts" setup>
 import { ref, computed } from "vue";
-import { closeOutline, heart, location, reloadSharp } from "ionicons/icons";
+import {
+  closeOutline,
+  location,
+  reloadSharp,
+  personOutline,
+  heartOutline,
+  arrowUndoOutline,
+  starOutline,
+  refreshOutline,
+} from "ionicons/icons";
 
 type Card = {
   id: number;
@@ -188,12 +216,12 @@ const visibleCards = computed(() =>
   cards.value.slice(currentIndex.value, currentIndex.value + 3)
 );
 
-const swipeLeft = () => {
+const swipe = () => {
   if (currentIndex.value < cards.value.length) currentIndex.value++;
 };
 
-const swipeRight = () => {
-  if (currentIndex.value < cards.value.length) currentIndex.value++;
+const undo = () => {
+  if ((currentIndex.value - 1) >= 0) currentIndex.value--;
 };
 
 const reset = () => {
@@ -215,18 +243,17 @@ const closeDetails = () => {
   flex-direction: column;
   width: 100%;
   height: 100vh;
-  justify-content: center;
   align-items: center;
   background: #f8f9fa;
   overflow: hidden;
   position: relative;
 }
 
-/*===STACK===*/
 .card-stack {
   position: relative;
   width: 90%;
   height: 70%;
+  padding-top: 20px;
 }
 
 .card {
@@ -303,11 +330,6 @@ const closeDetails = () => {
   width: 100%;
   height: 40vh;
   object-fit: cover;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-}
-
-.galera-image {
 }
 
 .back-icon {

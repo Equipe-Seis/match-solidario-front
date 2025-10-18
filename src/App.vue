@@ -11,7 +11,7 @@
 
       <ion-content>
         <ion-list>
-          <ion-item button router-link="/feed">
+          <ion-item button router-link="/match">
             <ion-icon :icon="homeOutline" slot="start"></ion-icon>
             <ion-label>Início</ion-label>
           </ion-item>
