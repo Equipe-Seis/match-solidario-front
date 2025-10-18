@@ -1,10 +1,5 @@
 <template>
   <ion-page>
-    <ion-header>
-      <ion-toolbar color="primary">
-        <ion-title>Login</ion-title>
-      </ion-toolbar>
-    </ion-header>
     <ion-content class="ion-padding">
       <div class="login-container">
         <div class="ion-padding">
@@ -52,16 +47,12 @@ import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import {
   IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
   IonInput,
   IonButton,
   toastController,
   IonInputPasswordToggle,
 } from "@ionic/vue";
-import { eye, eyeOff } from "ionicons/icons";
 import { useAuth } from "@/composables/useAuth";
 
 const router = useRouter();
