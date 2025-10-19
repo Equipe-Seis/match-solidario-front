@@ -7,8 +7,8 @@
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-buttons slot="secondary">
-          <ion-button>
-            <ion-icon slot="icon-only" :icon="personOutline" size="large" href="/profile"></ion-icon>
+          <ion-button router-link="/profile">
+            <ion-icon slot="icon-only" :icon="personOutline" size="large"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
