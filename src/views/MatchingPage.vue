@@ -8,7 +8,7 @@
         </ion-buttons>
         <ion-buttons slot="secondary">
           <ion-button>
-            <ion-icon slot="icon-only" :icon="personOutline" size="large"></ion-icon>
+            <ion-icon slot="icon-only" :icon="personOutline" size="large" href="/profile" </ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
@@ -52,7 +52,7 @@
               height: 100%;
               justify-content: center;
               align-items: center;
-              font-size: 1.5rem;
+              font-size: 20px;
             "
           >
             <p>Você finalizou por hoje!</p>
@@ -135,7 +135,7 @@
             :icon="closeOutline"
           ></ion-icon>
         </ion-button>
-        <ion-button shape="round" color="white" size="large" @click="swipe">
+        <ion-button shape="round" color="white" size="large" @click=""> <!--favorite-->
           <ion-icon
             slot="icon-only"
             color="primary"

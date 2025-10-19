@@ -3,9 +3,9 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-back-button default-href="/register"></ion-back-button>
+          <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <ion-title>Cadastrar Novo Projeto</ion-title>
+        <ion-title>Cadastrar novo projeto</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -18,11 +18,11 @@
             </ion-card-header>
             <ion-card-content>
               <ion-item>
-                <ion-label position="stacked">Nome do Projeto</ion-label>
+                <ion-label position="stacked">Nome do projeto</ion-label>
                 <ion-input v-model="projectForm.name" required placeholder="Ex: Horta Comunitária do Bairro"></ion-input>
               </ion-item>
               <ion-item>
-                <ion-label position="stacked">Endereço Principal do Projeto</ion-label>
+                <ion-label position="stacked">Endereço principal do projeto</ion-label>
                 <ion-input v-model="projectForm.address" required placeholder="Rua, número, bairro"></ion-input>
               </ion-item>
               <ion-item>
@@ -34,7 +34,7 @@
                 <ion-input v-model="projectForm.state" required :maxlength="2"></ion-input>
               </ion-item>
               <ion-item>
-                <ion-label position="stacked">Sobre o Projeto</ion-label>
+                <ion-label position="stacked">Sobre o projeto</ion-label>
                 <ion-textarea v-model="projectForm.description" placeholder="Descreva a missão e as atividades." auto-grow></ion-textarea>
               </ion-item>
             </ion-card-content>
@@ -42,8 +42,8 @@
 
           <ion-card>
             <ion-card-header>
-              <ion-card-title>2. Crie o Primeiro Serviço Solidário</ion-card-title>
-              <ion-card-subtitle>Descreva a primeira oportunidade de voluntariado para este projeto.</ion-card-subtitle>
+              <ion-card-title>2. Crie o primeiro serviço solidário</ion-card-title>
+              <ion-card-subtitle>Serviços solidários são oportunidades que necessitam de voluntários. Descreva aqui um serviço solidário e chame todos à ação!</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
               <ion-item>
@@ -97,7 +97,7 @@
     <ion-footer>
       <ion-toolbar>
         <ion-button expand="block" @click="onSubmitUi" :disabled="submitting || !isFormValid">
-          {{ submitting ? 'Publicando...' : 'Cadastrar Projeto e Publicar Serviço' }}
+          {{ submitting ? 'Publicando...' : 'Cadastrar Projeto' }}
         </ion-button>
       </ion-toolbar>
     </ion-footer>

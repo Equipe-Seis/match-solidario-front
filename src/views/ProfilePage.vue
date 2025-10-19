@@ -1,11 +1,11 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
+    <ion-header>
+      <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-back-button default-href="/match"></ion-back-button>
+          <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <ion-title>Meu Perfil</ion-title>
+        <ion-title>Perfil</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -66,7 +66,6 @@ import {
   IonList,
   IonItem,
   IonLabel,
-  IonIcon,
   IonButton,
   IonButtons,
   IonBackButton,
@@ -76,7 +75,6 @@ import {
   IonCardContent,
   IonAvatar
 } from '@ionic/vue';
-import { personCircleOutline } from 'ionicons/icons';
 import { auth, db } from '@/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
