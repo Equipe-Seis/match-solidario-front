@@ -7,8 +7,8 @@ import ProfilePage from '../views/ProfilePage.vue';
 import MatchingPage from '@/views/MatchingPage.vue';
 import VolunteerRegisterPage from '../views/volunteer/VolunteerRegisterPage.vue';
 import VolunteerEditPage from '../views/volunteer/VolunteerEditPage.vue';
-const InstitutionRegisterPage = () => import('../views/institution/InstitutionRegisterPage.vue');
-import ItemView from '@/views/ItemView.vue';
+const InstitutionRegisterPage = () =>
+  import("../views/institution/InstitutionRegisterPage.vue");
 import { auth } from '@/firebase';
 
 const routes: Array<RouteRecordRaw> = [
