@@ -37,7 +37,6 @@ export const useProjects = () => {
 
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        console.log(data);
         
         fetchedServices.push({
           id: doc.id,

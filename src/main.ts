@@ -42,9 +42,8 @@ router.isReady().then(() => {
   setTimeout(async () => {
     try {
       await SplashScreen.hide();
-      console.log("Splash screen oculta com sucesso");
     } catch (err) {
       console.warn("Falha ao ocultar splash screen:", err);
     }
-  }, 300); // ajuste o delay se quiser
+  }, 300); 
 });
