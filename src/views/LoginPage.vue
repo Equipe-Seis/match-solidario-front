@@ -34,7 +34,7 @@
           </ion-button>
 
           <ion-button fill="clear" expand="block" @click="goToRegister">
-            Não tem uma conta? Cadastre-se
+            Não tem uma conta? <br>Cadastre-se
           </ion-button>
         </div>
       </div>

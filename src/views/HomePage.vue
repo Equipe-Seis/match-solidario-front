@@ -15,7 +15,7 @@
           <ion-button
             expand="block"
             color="primary"
-            @click="goTo('/register')"
+          @click="goTo('/register?role=volunteer')"
           >
             Quero ajudar
           </ion-button>
@@ -23,7 +23,7 @@
             expand="block"
             fill="outline"
             color="primary"
-            @click="goTo('/register')"
+            @click="goTo('/register?role=institution')"
           >
             Preciso de ajuda
           </ion-button>

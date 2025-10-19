@@ -37,7 +37,7 @@
     </ion-menu>
 
     <!-- CONTEÚDO PRINCIPAL -->
-    <div class="ion-page" id="main-content">
+    <div class="ion-page" id="main-contionic cap run android -l --externalent">
       <ion-router-outlet />
     </div>
   </ion-app>
@@ -51,7 +51,6 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
-  IonList,
   IonItem,
   IonLabel,
   IonIcon,
