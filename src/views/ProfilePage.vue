@@ -94,24 +94,26 @@ const roleLabel = computed(() => {
 });
 
 async function loadProfile() {
-  const u = auth.currentUser;
-  if (!u) {
+  const user = auth.currentUser;
+
+  if (!user) {
     router.push('/login');
     return;
   }
-  userEmail.value = u.email || '';
-  const userSnap = await getDoc(doc(db, 'users', u.uid));
+
+  userEmail.value = user.email || '';
+  const userSnap = await getDoc(doc(db, 'users', user.uid));
+
   if (userSnap.exists()) {
     const data: any = userSnap.data();
     userName.value = data?.name || '';
     role.value = data?.role || null;
     volunteerId.value = data?.volunteerId || null;
   }
-  if (role.value === 'volunteer') {
-    if (volunteerId.value) {
-      const vSnap = await getDoc(doc(db, 'volunteers', volunteerId.value));
-      if (vSnap.exists()) volunteer.value = vSnap.data();
-    }
+
+  if (role.value === 'volunteer' && volunteerId.value) {
+    const vSnap = await getDoc(doc(db, 'volunteers', volunteerId.value));
+    if (vSnap.exists()) volunteer.value = vSnap.data();
   }
 }
 

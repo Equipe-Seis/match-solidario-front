@@ -1,27 +1,39 @@
-//TODO: remover este arquivo antes da entrega, exemplo de utilização do firebase
-
-import { collection, addDoc, getDoc, getDocs, onSnapshot, query, orderBy, updateDoc, deleteDoc, doc, serverTimestamp } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  query,
+  orderBy,
+  updateDoc,
+  deleteDoc,
+  doc,
+  serverTimestamp,
+} from "firebase/firestore";
 import { db } from "@/firebase";
-import { ref } from "vue";
 
 export default function useFirestore(collectionName = "items") {
   const colRef = collection(db, collectionName);
 
   async function addItem(data: Record<string, any>) {
-    const docRef = await addDoc(colRef, { ...data, createdAt: serverTimestamp() });
+    const docRef = await addDoc(colRef, {
+      ...data,
+      createdAt: serverTimestamp(),
+    });
     return docRef.id;
   }
 
   async function getItems() {
     const q = query(colRef, orderBy("createdAt", "desc"));
     const snap = await getDocs(q);
-    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
   }
 
   function subscribeItems(onChange: (items: any[]) => void) {
     const q = query(colRef, orderBy("createdAt", "desc"));
-    const unsub = onSnapshot(q, snapshot => {
-      const items = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+    const unsub = onSnapshot(q, (snapshot) => {
+      const items = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
       onChange(items);
     });
     return unsub;

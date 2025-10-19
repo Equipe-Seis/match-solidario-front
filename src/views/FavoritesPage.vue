@@ -9,32 +9,41 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding" color="light">
-      <div>
+      <div v-if="loading">
+        Carregando
+      </div>
+      <div v-else-if="user?.favorites && user.favorites.length > 0">
         <ion-list lines="full">
-          <ion-item>
-            <ion-label>Pokémon Yellow</ion-label>
-            <ion-button shape="round" fill="clear" size="large" @click="">
-              <ion-icon
-                slot="icon-only"
-                color="danger"
-                :icon="closeCircle"
-              ></ion-icon>
+          <ion-item v-for="fav in user.favorites">
+            <ion-label>{{ fav.name }}</ion-label>
+            <ion-button shape="round" fill="clear" size="large" @click="favorite(fav.id)">
+              <ion-icon slot="icon-only" color="danger" :icon="closeCircle"></ion-icon>
             </ion-button>
           </ion-item>
         </ion-list>
+      </div>
+      <div v-else>
+        Nada por aqui
       </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonItem, IonLabel, IonList } from "@ionic/vue";
+import { useUser } from "@/composables/useUser";
+import { IonContent, IonItem, IonLabel, IonList, onIonViewWillEnter } from "@ionic/vue";
 import {
   closeCircle,
-  closeCircleOutline,
-  closeOutline,
-  timeOutline,
 } from "ionicons/icons";
+
+const { user, load, loading, favorite } = useUser()
+
+const build = async () => {
+  console.log('build');
+
+  setTimeout(() => load(), 1500)
+}
+
+onIonViewWillEnter(build)
 </script>
 
-<style scoped lang="scss" src="./css/RegisterPage.scss"></style>

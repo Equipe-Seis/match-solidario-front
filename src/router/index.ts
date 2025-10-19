@@ -7,10 +7,13 @@ import ProfilePage from "../views/ProfilePage.vue";
 import MatchingPage from "@/views/MatchingPage.vue";
 import VolunteerRegisterPage from "../views/volunteer/VolunteerRegisterPage.vue";
 import VolunteerEditPage from "../views/volunteer/VolunteerEditPage.vue";
+
 const InstitutionRegisterPage = () =>
   import("../views/institution/InstitutionRegisterPage.vue");
+
+const FavoritesPage = () => import("@/views/FavoritesPage.vue");
+
 import { auth } from "@/firebase";
-import FavoritesPage from "@/views/FavoritesPage.vue";
 
 const routes: Array<RouteRecordRaw> = [
   { path: "/", component: LoginPage },
@@ -20,7 +23,7 @@ const routes: Array<RouteRecordRaw> = [
   { path: "/register", component: RegisterPage },
   { path: "/profile", component: ProfilePage }, //, meta: { requiresAuth: true }
   { path: "/volunteer/register", component: VolunteerRegisterPage },
-  { path: "/myfavorites", component: FavoritesPage },
+  { name: "favorites", path: "/myfavorites", component: FavoritesPage },
   {
     path: "/volunteer/edit/:id",
     component: VolunteerEditPage,

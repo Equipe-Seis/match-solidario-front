@@ -16,11 +16,9 @@
           </ion-card-header>
           <ion-card-content>
             <form @submit.prevent="onSaveUi">
-              <ion-item lines="inset" @click="tiraFoto">
+              <ion-item lines="inset" @click="takePicture">
                 <img :src="photo" alt="foto de perfil" ref="imageElement" class="profile-img ion-margin-end">
                 <ion-label>Foto de perfil (opcional)</ion-label>
-                <!-- <ion-button @click="tiraFoto">TiraFoto</ion-button> -->
-                <!-- <input class="file-input" type="file" accept="image/*" @change="onFileChange" /> -->
               </ion-item>
               <ion-item>
                 <ion-label position="stacked">Nome completo</ion-label>
@@ -184,14 +182,14 @@ async function load() {
   }
 }
 
-const tiraFoto = async () => {
+const takePicture = async () => {
   const image = await Camera.getPhoto({
     quality: 90,
     allowEditing: true,
     resultType: CameraResultType.Uri
   });
 
-  var imageUrl = image.webPath;
+  const imageUrl = image.webPath;
 
   if (imageElement.value && imageUrl) {
     imageElement.value.src = imageUrl;

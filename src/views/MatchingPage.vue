@@ -91,8 +91,8 @@
         <ion-button shape="round" color="white" size="large" @click="swipe">
           <ion-icon slot="icon-only" color="danger" :icon="closeOutline"></ion-icon>
         </ion-button>
-        <ion-button shape="round" color="white" size="large" @click=""> <!--favorite-->
-          <ion-icon slot="icon-only" color="primary" :icon="starOutline"></ion-icon>
+        <ion-button shape="round" color="white" size="large" @click="favorite(viewingProject.id)">
+          <ion-icon slot="icon-only" color="primary" :icon="isFavorite ? star : starOutline"></ion-icon>
         </ion-button>
         <ion-button shape="round" color="white" size="large" @click="swipe">
           <ion-icon slot="icon-only" color="success" :icon="heartOutline"></ion-icon>
@@ -113,13 +113,17 @@ import {
   starOutline,
   refreshOutline,
   locationOutline,
+  star,
 } from "ionicons/icons";
 import { ref, computed } from 'vue';
 import { Project, useProjects } from '@/composables/useProjects';
+import { useUser } from "@/composables/useUser";
+import { onIonViewWillEnter } from "@ionic/vue";
 
 const placeholderImg = "https://picsum.photos/400/600?random=4";
 
-const { load, projects, loading, isError } = useProjects()
+const { load, projects, loading } = useProjects()
+const { user, load: loadUser, favorite, loading: loadingUser } = useUser()
 
 const currentIndex = ref(0);
 const selectedProject = ref<Project | null>(null);
@@ -127,6 +131,14 @@ const selectedProject = ref<Project | null>(null);
 const visibleProjects = computed(() =>
   projects.value.slice(currentIndex.value, currentIndex.value + 3)
 );
+
+const viewingProject = computed(() => {
+  return projects.value[currentIndex.value]
+})
+
+const isFavorite = computed(() => {
+  return user.value?.favorites?.some(x => x.id === viewingProject.value.id)
+})
 
 const swipe = () => {
   if (currentIndex.value < projects.value.length) currentIndex.value++;
@@ -149,10 +161,11 @@ const closeDetails = () => {
 };
 
 const build = async () => {
+  await loadUser()
   setTimeout(() => load(), 1500)
 }
 
-build()
+onIonViewWillEnter(build)
 </script>
 
 <style scoped>
