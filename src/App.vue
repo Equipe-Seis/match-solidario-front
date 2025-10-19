@@ -16,11 +16,7 @@
         </ion-item>
 
         <ion-item button router-link="/profile">
-          <ion-icon
-            :icon="personCircleOutline"
-            slot="start"
-            color="secondary"
-          ></ion-icon>
+          <ion-icon :icon="personCircleOutline" slot="start" color="secondary"></ion-icon>
           <ion-label>Perfil</ion-label>
         </ion-item>
 
@@ -37,7 +33,7 @@
     </ion-menu>
 
     <!-- CONTEÚDO PRINCIPAL -->
-    <div class="ion-page" id="main-contionic cap run android -l --externalent">
+    <div class="ion-page" id="main-content">
       <ion-router-outlet />
     </div>
   </ion-app>

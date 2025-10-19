@@ -5,6 +5,9 @@ project(':capacitor-android').projectDir = new File('../node_modules/.pnpm/@capa
 include ':capacitor-app'
 project(':capacitor-app').projectDir = new File('../node_modules/.pnpm/@capacitor+app@7.1.0_@capacitor+core@7.4.3/node_modules/@capacitor/app/android')
 
+include ':capacitor-camera'
+project(':capacitor-camera').projectDir = new File('../node_modules/.pnpm/@capacitor+camera@7.0.2_@capacitor+core@7.4.3/node_modules/@capacitor/camera/android')
+
 include ':capacitor-geolocation'
 project(':capacitor-geolocation').projectDir = new File('../node_modules/.pnpm/@capacitor+geolocation@7.1.5_@capacitor+core@7.4.3/node_modules/@capacitor/geolocation/android')
 
@@ -16,9 +19,6 @@ project(':capacitor-keyboard').projectDir = new File('../node_modules/.pnpm/@cap
 
 include ':capacitor-splash-screen'
 project(':capacitor-splash-screen').projectDir = new File('../node_modules/.pnpm/@capacitor+splash-screen@7.0.3_@capacitor+core@7.4.3/node_modules/@capacitor/splash-screen/android')
-
-include ':capacitor-splash-screen'
-project(':capacitor-splash-screen').projectDir = new File('../node_modules/@capacitor/splash-screen/android')
 
 include ':capacitor-status-bar'
 project(':capacitor-status-bar').projectDir = new File('../node_modules/.pnpm/@capacitor+status-bar@7.0.3_@capacitor+core@7.4.3/node_modules/@capacitor/status-bar/android')
