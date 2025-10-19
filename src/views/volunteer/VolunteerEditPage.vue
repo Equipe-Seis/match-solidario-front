@@ -4,18 +4,24 @@
       <ion-toolbar color="primary">
         <ion-title>Editar Voluntário</ion-title>
         <ion-buttons slot="start">
-            <ion-menu-button></ion-menu-button>
-          </ion-buttons>
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
-      <div class="volunteer-edit ion-padding">
+      <div class="volunteer-edit">
         <ion-card>
           <ion-card-header>
             <ion-card-title>Dados do Perfil</ion-card-title>
           </ion-card-header>
-<ion-card-content>
+          <ion-card-content>
             <form @submit.prevent="onSaveUi">
+              <ion-item lines="inset" @click="tiraFoto">
+                <img :src="photo" alt="foto de perfil" ref="imageElement" class="profile-img ion-margin-end">
+                <ion-label>Foto de perfil (opcional)</ion-label>
+                <!-- <ion-button @click="tiraFoto">TiraFoto</ion-button> -->
+                <!-- <input class="file-input" type="file" accept="image/*" @change="onFileChange" /> -->
+              </ion-item>
               <ion-item>
                 <ion-label position="stacked">Nome completo</ion-label>
                 <ion-input v-model="form.fullName" required />
@@ -40,10 +46,7 @@
                 <ion-label position="stacked">Descrição</ion-label>
                 <ion-textarea v-model="form.description" auto-grow />
               </ion-item>
-              <ion-item lines="none">
-                <ion-label position="stacked">Foto de perfil (opcional)</ion-label>
-                <input class="file-input" type="file" accept="image/*" @change="onFileChange" />
-              </ion-item>
+
               <div class="actions"></div>
             </form>
           </ion-card-content>
@@ -55,13 +58,10 @@
           </ion-card-header>
           <ion-card-content>
             <div class="chips">
-              <ion-chip
-                v-for="label in interestsOptions"
-                :key="label"
+              <ion-chip v-for="label in interestsOptions" :key="label"
                 :color="selectedInterests.includes(label) ? 'primary' : undefined"
                 :outline="!selectedInterests.includes(label)"
-                @click="toggleInterest(label, !selectedInterests.includes(label))"
-              >
+                @click="toggleInterest(label, !selectedInterests.includes(label))">
                 {{ label }}
               </ion-chip>
             </div>
@@ -78,13 +78,10 @@
                 <ion-label> Dias disponíveis </ion-label>
               </ion-item>
               <div class="chips">
-                <ion-chip
-                  v-for="d in availabilityConfig.days"
-                  :key="d.value"
+                <ion-chip v-for="d in availabilityConfig.days" :key="d.value"
                   :color="availabilitySelected.days.includes(d.value) ? 'primary' : undefined"
                   :outline="!availabilitySelected.days.includes(d.value)"
-                  @click="toggleInArray(availabilitySelected.days, d.value, !availabilitySelected.days.includes(d.value))"
-                >
+                  @click="toggleInArray(availabilitySelected.days, d.value, !availabilitySelected.days.includes(d.value))">
                   {{ d.label }}
                 </ion-chip>
               </div>
@@ -93,13 +90,10 @@
                 <ion-label> Turnos </ion-label>
               </ion-item>
               <div class="chips">
-                <ion-chip
-                  v-for="s in availabilityConfig.shifts"
-                  :key="s.value"
+                <ion-chip v-for="s in availabilityConfig.shifts" :key="s.value"
                   :color="availabilitySelected.shifts.includes(s.value) ? 'primary' : undefined"
                   :outline="!availabilitySelected.shifts.includes(s.value)"
-                  @click="toggleInArray(availabilitySelected.shifts, s.value, !availabilitySelected.shifts.includes(s.value))"
-                >
+                  @click="toggleInArray(availabilitySelected.shifts, s.value, !availabilitySelected.shifts.includes(s.value))">
                   {{ s.label }}
                 </ion-chip>
               </div>
@@ -108,13 +102,10 @@
                 <ion-label> Frequência </ion-label>
               </ion-item>
               <div class="chips">
-                <ion-chip
-                  v-for="f in availabilityConfig.frequency"
-                  :key="f.value"
+                <ion-chip v-for="f in availabilityConfig.frequency" :key="f.value"
                   :color="availabilitySelected.frequency === f.value ? 'primary' : undefined"
                   :outline="availabilitySelected.frequency !== f.value"
-                  @click="availabilitySelected.frequency = availabilitySelected.frequency === f.value ? '' : f.value"
-                >
+                  @click="availabilitySelected.frequency = availabilitySelected.frequency === f.value ? '' : f.value">
                   {{ f.label }}
                 </ion-chip>
               </div>
@@ -123,13 +114,10 @@
                 <ion-label> Prefere atuar </ion-label>
               </ion-item>
               <div class="chips">
-                <ion-chip
-                  v-for="p in availabilityConfig.preference"
-                  :key="p.value"
+                <ion-chip v-for="p in availabilityConfig.preference" :key="p.value"
                   :color="availabilitySelected.preference === p.value ? 'primary' : undefined"
                   :outline="availabilitySelected.preference !== p.value"
-                  @click="availabilitySelected.preference = availabilitySelected.preference === p.value ? '' : p.value"
-                >
+                  @click="availabilitySelected.preference = availabilitySelected.preference === p.value ? '' : p.value">
                   {{ p.label }}
                 </ion-chip>
               </div>
@@ -140,14 +128,15 @@
     </ion-content>
     <ion-footer>
       <ion-toolbar>
-        <ion-button expand="block" :disabled="saving || !form.fullName" @click="onSaveUi">Salvar alterações</ion-button>
+        <ion-button style="margin: 10px;" expand="block" :disabled="saving || !form.fullName" @click="onSaveUi">Salvar
+          alterações</ion-button>
       </ion-toolbar>
     </ion-footer>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, useTemplateRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { toastController, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonItem, IonLabel, IonInput, IonTextarea, IonFooter, IonButton, IonList, IonChip } from '@ionic/vue';
 import { doc, getDoc } from 'firebase/firestore';
@@ -155,15 +144,18 @@ import { db } from '@/firebase';
 import useVolunteerRegistration from '@/composables/useVolunteerRegistration';
 import useInterests from '@/composables/useInterests';
 import useAvailability from '@/composables/useAvailability';
+import { Camera, CameraResultType } from '@capacitor/camera';
 
 const route = useRoute();
 const router = useRouter();
 const id = route.params.id as string;
 
-const { form, onPhoneInput, onCpfInput, onFileChange, updateVolunteer } = useVolunteerRegistration();
+const { form, onPhoneInput, onCpfInput, updateVolunteer } = useVolunteerRegistration();
 const { interestsOptions, selectedInterests, loadInterests, toggleInterest } = useInterests();
 const { config: availabilityConfig, selected: availabilitySelected, loadAvailability, toggleInArray } = useAvailability();
 const saving = ref(false);
+const imageElement = useTemplateRef('imageElement');
+const photo = ref('https://placehold.co/600x400?text=placeholder');
 
 async function load() {
   const snapshot = await getDoc(doc(db, 'volunteers', id));
@@ -189,6 +181,20 @@ async function load() {
     availabilitySelected.shifts = Array.isArray(data.availability.shifts) ? data.availability.shifts : [];
     availabilitySelected.frequency = data.availability.frequency || '';
     availabilitySelected.preference = data.availability.preference || '';
+  }
+}
+
+const tiraFoto = async () => {
+  const image = await Camera.getPhoto({
+    quality: 90,
+    allowEditing: true,
+    resultType: CameraResultType.Uri
+  });
+
+  var imageUrl = image.webPath;
+
+  if (imageElement.value && imageUrl) {
+    imageElement.value.src = imageUrl;
   }
 }
 
@@ -218,7 +224,18 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.actions { margin-top: 12px; }
+.actions {
+  margin-top: 12px;
+}
+
+.profile-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+  margin-bottom: 8px;
+}
 </style>
 
 
