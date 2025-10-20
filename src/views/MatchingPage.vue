@@ -32,11 +32,6 @@
             <div class="overlay">
               <div style="display: flex; flex-direction: column; gap: 5px;">
                 <span class="title">{{ card.name }}</span>
-                <!-- <div v-if="card.services && card.services.length > 0">
-                  <ion-chip v-for="categorie in card.services.flatMap(x => x.categories)" color="white" outline>
-                    {{ categorie }}
-                  </ion-chip>
-                </div> -->
                 <span class="location">
                   {{ card.address }}, {{ card.city }}, {{ card.state }}
                   <ion-icon :icon="locationOutline" size="medium"></ion-icon>

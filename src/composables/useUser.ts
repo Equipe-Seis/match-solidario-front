@@ -24,8 +24,6 @@ export const useUser = () => {
 
     try {
       const authUser = auth.currentUser;
-      console.log(authUser);
-      
        
       if (!authUser) {
         return;
@@ -66,8 +64,6 @@ export const useUser = () => {
       } as Project;
 
       const isAlreadyFavorite = data.favorites?.some((x) => x.id == projectSnap.id);
-
-      console.log('remove', isAlreadyFavorite);
 
       await updateDoc(userRef, {
         favorites: isAlreadyFavorite

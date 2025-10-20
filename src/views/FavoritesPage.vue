@@ -39,8 +39,6 @@ import {
 const { user, load, loading, favorite } = useUser()
 
 const build = async () => {
-  console.log('build');
-
   setTimeout(() => load(), 1500)
 }
 

@@ -68,7 +68,6 @@ import {
   IonLabel,
   IonButton,
   IonButtons,
-  IonBackButton,
   IonCard,
   IonCardHeader,
   IonCardTitle,
